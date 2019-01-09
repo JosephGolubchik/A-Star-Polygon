@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +30,9 @@ public class GUI implements Runnable {
 	private Graphics g;
 	
 	public ArrayList<Polygon> polygons;
-	public ArrayList<Line> lines;
+	public ArrayList<Point[]> lines;
+	
+	public String mode = null;
 
 	//Input
 	private KeyManager keyManager;
@@ -42,6 +45,7 @@ public class GUI implements Runnable {
 		this.width = width;
 		this.height = height;
 		polygons = new ArrayList<Polygon>();
+		lines = new ArrayList<Point[]>();
 	}
 
 	private void init(){
@@ -58,6 +62,20 @@ public class GUI implements Runnable {
 		polygonBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				polygons.add(new Polygon());
+				mode = "poly";
+			}         
+		}); 
+		
+		JButton lineBtn = new JButton("Line");
+		menuBar.add(lineBtn);
+
+		lineBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Point[] line = new Point[2];
+				line[0] = new Point(-1,-1);
+				line[1] = new Point(-1,-1);
+				lines.add(line);
+				mode = "line";
 			}         
 		}); 
 		
@@ -115,7 +133,7 @@ public class GUI implements Runnable {
 		g.setColor(Color.white);
 
 		drawPolygons(g);
-//		System.out.println(p.npoints);
+		drawLines(g);
 
 		//End Drawing!
 		bs.show();
@@ -137,6 +155,55 @@ public class GUI implements Runnable {
 		}
 	}
 	
+	private void drawLines(Graphics g) {
+		Iterator<Point[]> it = lines.iterator();
+		while(it.hasNext()) {
+			Point[] p = it.next();
+			g.setColor(Color.white);
+			g.drawLine((int)p[0].getX(), (int)p[0].getY(), (int)p[1].getX(), (int)p[1].getY());
+			int pointSize = 8;
+			g.fillOval((int)p[0].getX() - pointSize/2, (int)p[0].getY() - pointSize/2, pointSize, pointSize);
+			g.fillOval((int)p[1].getX() - pointSize/2, (int)p[1].getY() - pointSize/2, pointSize, pointSize);
+		}
+	}
+	
+	private boolean lineIntersectsPoly(Polygon pol, Point p0, Point p1) {
+		ArrayList<Point> points = divideLineToPoints(p0, p1, 20);
+		Iterator<Point> it = points.iterator();
+		while(it.hasNext()) {
+			Point curr = it.next();
+			if(pol.contains(curr)) return true;
+		}
+		return false;
+	}
+	
+	private ArrayList<Point> divideLineToPoints(Point p0, Point p1, int seg_len) {
+		ArrayList<Point> points = new ArrayList<Point>();
+		if(p0.getX() > p1.getX()) {
+			Point temp = p0;
+			p0 = p1;
+			p1 = temp;
+		}
+		double a = (p1.getY() - p0.getY())/(p1.getX() - p0.getX());
+		double dx = Math.abs(p1.getX()-p0.getX());
+		int numOfPoints = (int) Math.round((dx * Math.sqrt(1 + a*a))/seg_len);
+		points.add(p0);
+		for (int x = (int) p0.getX(); x < p1.getX(); x += dx/numOfPoints) {
+			points.add(new Point(x, (int) lineValueAtX(p0, p1, x)));
+		}
+		if(points.get(points.size()-1) != p1) {
+			points.add(p1);
+		}
+		return points;
+		
+	}
+	
+	private double lineValueAtX(Point p0, Point p1, double x) {
+		double a = (p1.getY() - p0.getY())/(p1.getX() - p0.getX());
+		double b = p0.getY() - a * p0.getX();
+		return a * x + b;
+	}
+		
 	private void createLines() {
 		
 	}

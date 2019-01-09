@@ -37,8 +37,14 @@ public class MouseManager implements MouseListener{
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		if(gui.polygons.size() > 0) {
+		if(gui.mode == "poly") {
 			gui.polygons.get(gui.polygons.size()-1).addPoint((int)mousePos.getX(), (int)mousePos.getY());
+		}
+		if(gui.mode == "line") {
+			if(gui.lines.get(gui.lines.size()-1)[0] == new Point(-1,-1))
+				gui.lines.get(gui.lines.size()-1)[0] = mousePos;
+			else if(gui.lines.get(gui.lines.size()-1)[1] == new Point(-1,-1))
+				gui.lines.get(gui.lines.size()-1)[1] = mousePos;
 		}
 	}
 
