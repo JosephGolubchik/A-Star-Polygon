@@ -159,7 +159,15 @@ public class GUI implements Runnable {
 		Iterator<Point[]> it = lines.iterator();
 		while(it.hasNext()) {
 			Point[] p = it.next();
+			
 			g.setColor(Color.white);
+			
+			Iterator<Polygon> pol_it = polygons.iterator();
+			while(pol_it.hasNext()) {
+				Polygon pol = pol_it.next();
+				if(lineIntersectsPoly(pol, p[0], p[1])) g.setColor(Color.red);;
+			}
+			
 			if((int)p[1].getX() != -1) {
 				g.drawLine((int)p[0].getX(), (int)p[0].getY(), (int)p[1].getX(), (int)p[1].getY());
 				int pointSize = 8;
