@@ -84,7 +84,9 @@ public class GUI implements Runnable {
 
 		runBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				lines.clear();
+				findVisibillityGraph();
+				System.out.println(lines.size());
 			}         
 		}); 
 
@@ -140,6 +142,33 @@ public class GUI implements Runnable {
 		g.dispose();
 	}
 
+	private void findVisibillityGraph() {
+		ArrayList<Point> verts = new ArrayList<Point>();
+		
+		Iterator<Polygon> it = polygons.iterator();
+		while(it.hasNext()) {
+			Polygon pol = it.next();
+			for (int i = 0; i < pol.npoints; i++) {
+				verts.add(new Point(pol.xpoints[i], pol.ypoints[i]));
+			}
+		}
+		
+		Iterator<Point> first_point_it = verts.iterator();
+		while(first_point_it.hasNext()) {
+			Point first_point = first_point_it.next();
+			Iterator<Point> sec_point_it = verts.iterator();
+			while(sec_point_it.hasNext()) {
+				Point sec_point = sec_point_it.next();
+				if(first_point != sec_point) {
+					Point[] line = new Point[2];
+					line[0] = first_point;
+					line[1] = sec_point;
+					lines.add(line);
+				}
+			}
+		}
+	}
+	
 	private void drawPolygons(Graphics g) {
 		Iterator<Polygon> it = polygons.iterator();
 		while(it.hasNext()) {
@@ -178,6 +207,7 @@ public class GUI implements Runnable {
 				int pointSize = 8;
 				g.fillOval((int)p[0].getX() - pointSize/2, (int)p[0].getY() - pointSize/2, pointSize, pointSize);
 			}
+			g.setColor(Color.white);
 		}
 	}
 	
