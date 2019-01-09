@@ -159,11 +159,23 @@ public class GUI implements Runnable {
 			Iterator<Point> sec_point_it = verts.iterator();
 			while(sec_point_it.hasNext()) {
 				Point sec_point = sec_point_it.next();
+				boolean intersects = false;
 				if(first_point != sec_point) {
-					Point[] line = new Point[2];
-					line[0] = first_point;
-					line[1] = sec_point;
-					lines.add(line);
+					
+					Iterator<Polygon> it1 = polygons.iterator();
+					while(it1.hasNext()) {
+						Polygon pol = it1.next();
+						if(lineIntersectsPoly(pol, first_point, sec_point)) {
+							intersects = true;
+						}
+					}
+
+					if (!intersects) {
+						Point[] line = new Point[2];
+						line[0] = first_point;
+						line[1] = sec_point;
+						lines.add(line);
+					}
 				}
 			}
 		}
