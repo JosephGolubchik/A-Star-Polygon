@@ -160,10 +160,16 @@ public class GUI implements Runnable {
 		while(it.hasNext()) {
 			Point[] p = it.next();
 			g.setColor(Color.white);
-			g.drawLine((int)p[0].getX(), (int)p[0].getY(), (int)p[1].getX(), (int)p[1].getY());
-			int pointSize = 8;
-			g.fillOval((int)p[0].getX() - pointSize/2, (int)p[0].getY() - pointSize/2, pointSize, pointSize);
-			g.fillOval((int)p[1].getX() - pointSize/2, (int)p[1].getY() - pointSize/2, pointSize, pointSize);
+			if((int)p[1].getX() != -1) {
+				g.drawLine((int)p[0].getX(), (int)p[0].getY(), (int)p[1].getX(), (int)p[1].getY());
+				int pointSize = 8;
+				g.fillOval((int)p[0].getX() - pointSize/2, (int)p[0].getY() - pointSize/2, pointSize, pointSize);
+				g.fillOval((int)p[1].getX() - pointSize/2, (int)p[1].getY() - pointSize/2, pointSize, pointSize);
+			}
+			else {
+				int pointSize = 8;
+				g.fillOval((int)p[0].getX() - pointSize/2, (int)p[0].getY() - pointSize/2, pointSize, pointSize);
+			}
 		}
 	}
 	

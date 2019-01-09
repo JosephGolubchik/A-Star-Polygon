@@ -41,9 +41,9 @@ public class MouseManager implements MouseListener{
 			gui.polygons.get(gui.polygons.size()-1).addPoint((int)mousePos.getX(), (int)mousePos.getY());
 		}
 		if(gui.mode == "line") {
-			if(gui.lines.get(gui.lines.size()-1)[0] == new Point(-1,-1))
+			if(gui.lines.get(gui.lines.size()-1)[0].getX() == -1)
 				gui.lines.get(gui.lines.size()-1)[0] = mousePos;
-			else if(gui.lines.get(gui.lines.size()-1)[1] == new Point(-1,-1))
+			else if(gui.lines.get(gui.lines.size()-1)[1].getX() == -1)
 				gui.lines.get(gui.lines.size()-1)[1] = mousePos;
 		}
 	}
