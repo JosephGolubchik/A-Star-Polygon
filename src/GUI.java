@@ -86,7 +86,7 @@ public class GUI implements Runnable {
 			public void actionPerformed(ActionEvent arg0) {
 				lines.clear();
 				findVisibillityGraph();
-				System.out.println(lines.size());
+//				System.out.println(lines.size());
 			}         
 		}); 
 
@@ -206,7 +206,6 @@ public class GUI implements Runnable {
 			Iterator<Polygon> pol_it = polygons.iterator();
 			while(pol_it.hasNext()) {
 				Polygon pol = pol_it.next();
-				if(lineIntersectsPoly(pol, p[0], p[1])) g.setColor(Color.red);;
 			}
 			
 			if((int)p[1].getX() != -1) {
@@ -224,7 +223,7 @@ public class GUI implements Runnable {
 	}
 	
 	private boolean lineIntersectsPoly(Polygon pol, Point p0, Point p1) {
-		ArrayList<Point> points = divideLineToPoints(p0, p1, 20);
+		ArrayList<Point> points = divideLineToPoints(p0, p1, 50);
 		Iterator<Point> it = points.iterator();
 		while(it.hasNext()) {
 			Point curr = it.next();
@@ -244,8 +243,8 @@ public class GUI implements Runnable {
 		double dx = Math.abs(p1.getX()-p0.getX());
 		int numOfPoints = (int) Math.round((dx * Math.sqrt(1 + a*a))/seg_len);
 		points.add(p0);
-		for (int x = (int) p0.getX(); x < p1.getX(); x += dx/numOfPoints) {
-			points.add(new Point(x, (int) lineValueAtX(p0, p1, x)));
+		for (double x = p0.getX(); x < p1.getX(); x += dx/numOfPoints) {
+			points.add(new Point((int) x, (int) lineValueAtX(p0, p1, x)));
 		}
 		if(points.get(points.size()-1) != p1) {
 			points.add(p1);
